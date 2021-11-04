@@ -9,7 +9,7 @@ public class CameraMove : MonoBehaviour
 
     public Transform player;
     
-    private void Start()
+    private void Awake()
     {
         deltaToPlayer = player.position - transform.position;
     }

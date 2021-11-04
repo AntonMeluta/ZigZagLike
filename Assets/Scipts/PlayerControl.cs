@@ -2,13 +2,23 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerMove : MonoBehaviour
+public class PlayerControl : MonoBehaviour
 {
     private Rigidbody rb;
     private bool isForwardMove;
     private Vector3 targetVelocity;
 
     public float speedSphere = 2;
+
+    private void OnEnable()
+    {
+        EventsBroker.RestartGameAction += RestartGame;
+    }
+
+    private void OnDisable()
+    {
+        EventsBroker.RestartGameAction -= RestartGame;
+    }
 
     private void Start()
     {
@@ -17,6 +27,28 @@ public class PlayerMove : MonoBehaviour
         targetVelocity = Vector3.forward;
     }
 
+    private void RestartGame()
+    {
+        isForwardMove = true;
+        targetVelocity = Vector3.forward;
+    }
+
+    public void GetPointSpawn(Transform tileTransform)
+    {
+        Vector3 vectorSpawnOnStart = tileTransform.position;
+        vectorSpawnOnStart.y += 3;
+        transform.position = vectorSpawnOnStart;
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.GetComponent<CrystallControl>())
+        {
+            print("—Œ¡–¿À»  –»—“¿ÀÀ, œ≈–≈ƒ¿“‹ ÀŒ√» ” ¬Œ VIEW MVC");
+            other.GetComponent<CrystallControl>().CollisionWithPlayer();
+        }
+        
+    }
 
     private void FixedUpdate()
     {
