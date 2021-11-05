@@ -125,5 +125,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9d63949272bfab94cbb4099f56bc6d1f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speedSphere: 3
-  targetRay: {fileID: 0}
+  speedSphere: 10

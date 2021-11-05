@@ -8,6 +8,8 @@ public class PlayerControl : MonoBehaviour
     private Rigidbody rb;
     private TileSpawner tileSpawner;
     private GameManager gameManager;
+    private MenuScreenView menuScreenView;
+    private CrystallCounterView crystallCounterView;
 
     private bool isForwardMove;
     private Vector3 targetVelocity;
@@ -20,10 +22,13 @@ public class PlayerControl : MonoBehaviour
     public float speedSphere = 2;
 
     [Inject]
-    private void ConstructorLike(TileSpawner spawner, GameManager manager)
+    private void ConstructorLike(TileSpawner spawner, GameManager manager, 
+        MenuScreenView menuView, CrystallCounterView crystallView)
     {
         gameManager = manager;
         tileSpawner = spawner;
+        menuScreenView = menuView;
+        crystallCounterView = crystallView;
     }
 
     private void OnEnable()
@@ -51,14 +56,13 @@ public class PlayerControl : MonoBehaviour
 
     public void PlayerFell()
     {
-        //gameManager.
         EventsBroker.RestartGame();
+        menuScreenView.ToSwithcScreen();
     }
 
     public void InstallPosition()
     {
         float deltaY = 3.1f;
-        //Vector3 vectorSpawnOnStart = tileSpawner.GetPoinSpawn().position;
         Vector3 vectorSpawnOnStart = Vector3.zero;
         vectorSpawnOnStart.y += deltaY;
         transform.position = vectorSpawnOnStart;
@@ -77,7 +81,7 @@ public class PlayerControl : MonoBehaviour
     {
         if (other.GetComponent<CrystallControl>())
         {
-            print("—Œ¡–¿À»  –»—“¿ÀÀ, œ≈–≈ƒ¿“‹ ÀŒ√» ” ¬Œ VIEW MVC");
+            crystallCounterView.CrystallPickupEvent();
             other.GetComponent<CrystallControl>().CollisionWithPlayer();
         }
     }

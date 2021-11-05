@@ -7,9 +7,24 @@ public class GameManager : MonoBehaviour
 
     private GameState currentState;
 
+    private void OnEnable()
+    {
+        EventsBroker.OnRestartGame += RestartGame;
+    }
+
+    private void OnDisable()
+    {
+        EventsBroker.OnRestartGame -= RestartGame;
+    }
+
     private void Start()
     {
-        UpdateGameState(GameState.game);
+        UpdateGameState(GameState.menu);
+    }
+
+    private void RestartGame()
+    {
+        UpdateGameState(GameState.menu);
     }
     
     //Загрузка всех сохранённых данных из реестра

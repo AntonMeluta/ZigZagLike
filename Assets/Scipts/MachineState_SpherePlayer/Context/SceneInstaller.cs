@@ -3,6 +3,8 @@ using UnityEngine;
 
 public class SceneInstaller : MonoInstaller, IInitializable
 {
+    public MenuScreenView menuScreenView;
+    public CrystallCounterView crystallCounterView;
     public GameObject gameManagerPrefab;
     public GameObject crystallSpawnerPrefab;
     public GameObject tileSpawnerPrefab;
@@ -10,11 +12,48 @@ public class SceneInstaller : MonoInstaller, IInitializable
 
     public override void InstallBindings()
     {
+        BindMenuScreenMvc();
+        BindCrystallCounterMvc();
+
+        BindMenuScreenView();
+        BindCrystallCounterView();
         BindGameManger();
         BindInstallerInterfaces();
         BindingCrystallSpawner();
         BindingTileSpawner();
         BindingPlayerSpawner();
+    }
+
+    private void BindMenuScreenMvc()
+    {
+        Container.
+            Bind<MenuScreenFactory>().
+            FromInstance(new MenuScreenFactory(menuScreenView)).
+            AsSingle();
+    }
+
+    private void BindCrystallCounterMvc()
+    {
+        Container.
+            Bind<CrystalCounterFactory>().
+            FromInstance(new CrystalCounterFactory(crystallCounterView)).
+            AsSingle();
+    }
+
+    private void BindMenuScreenView()
+    {
+        Container.
+            Bind<MenuScreenView>().
+            FromInstance(menuScreenView).
+            AsSingle();
+    }
+
+    private void BindCrystallCounterView()
+    {
+        Container.
+            Bind<CrystallCounterView>().
+            FromInstance(crystallCounterView).
+            AsSingle();
     }
 
     private void BindGameManger()
@@ -74,6 +113,12 @@ public class SceneInstaller : MonoInstaller, IInitializable
 
     public void Initialize()
     {
-        //throw new System.NotImplementedException();
+        MenuScreenFactory factoryMenuScreen = Container.Resolve<MenuScreenFactory>();
+        factoryMenuScreen.InitializeFactory();
+
+        //Crystallcounter MVC model
+        CrystalCounterFactory factoryCrystalCounter = Container.Resolve<CrystalCounterFactory>();
+        factoryCrystalCounter.InitializeFactory();
+
     }
 }

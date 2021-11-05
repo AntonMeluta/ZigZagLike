@@ -76,8 +76,6 @@ public class TileSpawner : MonoBehaviour
         }
 
         pointSpawnFoPlayer = allTiles[lineCount * lineCount / 2].transform;
-        //player.GetPointSpawn(allTiles[lineCount * lineCount / 2].transform);
-
     }
 
     public Transform GetPoinSpawn()
@@ -87,22 +85,23 @@ public class TileSpawner : MonoBehaviour
     
     private IEnumerator SpawnTiles()
     {
+        int firstPartySpawnCount = 50;
+
         while (true)
         {
-            yield return new WaitForSeconds(1);
+            if (allTiles.Count < firstPartySpawnCount)
+                yield return null;
+            else
+                yield return new WaitForSeconds(0.2f);
 
-            GameObject obj1 = Instantiate(tilePrefab,
-                allTiles[allTiles.Count - 1].forwardPointSpawn.bounds.center, Quaternion.identity);
-            allTiles.Add(obj1.GetComponent<TileControl>());
+            Vector3 targetPos = (Random.Range(0, 2) == 1) ?
+                allTiles[allTiles.Count - 1].forwardPointSpawn.bounds.center :
+                allTiles[allTiles.Count - 1].rightPointSpawn.bounds.center;
+
+            GameObject obj = Instantiate(tilePrefab, targetPos, Quaternion.identity);
+            allTiles.Add(obj.GetComponent<TileControl>());
             crystallSpawner.SpawnCrystall(allTiles[allTiles.Count - 1].transform);
-
-            yield return new WaitForSeconds(1);
-
-            GameObject obj2 = Instantiate(tilePrefab,
-                allTiles[allTiles.Count - 1].rightPointSpawn.bounds.center, Quaternion.identity);
-            allTiles.Add(obj2.GetComponent<TileControl>());
-            crystallSpawner.SpawnCrystall(allTiles[allTiles.Count - 1].transform);
-
+            
             /*if (tiles.Count > 0)
             {
 
