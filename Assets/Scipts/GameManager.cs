@@ -5,7 +5,7 @@ using UnityEngine;
 public class GameManager : MonoBehaviour
 {
 
-    private GameState currentState = GameState.menu;
+    private GameState currentState;
 
     private void Start()
     {
@@ -37,7 +37,7 @@ public class GameManager : MonoBehaviour
                 break;
         }
 
-        EventsBroker.UpdateState(prevGameState, currentState);
+        //EventsBroker.UpdateState(prevGameState, currentState);
     }
 
     private void Update()

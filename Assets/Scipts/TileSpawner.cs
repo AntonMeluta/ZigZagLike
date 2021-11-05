@@ -1,14 +1,22 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Zenject;
 
 public class TileSpawner : MonoBehaviour
 {
-    public List<TileControl> allTiles;
+    private Transform pointSpawnFoPlayer;
+    private CrystallSpawner crystallSpawner;
 
+    public List<TileControl> allTiles;
     public GameObject tilePrefab;
-    public PlayerControl player;
-    public CrystallSpawner crystallSpawner;
+    
+
+    [Inject]
+    private void ConstructorLike(CrystallSpawner spawner)
+    {
+        crystallSpawner = spawner;
+    }
 
     private void OnEnable()
     {
@@ -67,15 +75,20 @@ public class TileSpawner : MonoBehaviour
             }
         }
 
-        player.GetPointSpawn(allTiles[lineCount * lineCount / 2].transform);
+        pointSpawnFoPlayer = allTiles[lineCount * lineCount / 2].transform;
+        //player.GetPointSpawn(allTiles[lineCount * lineCount / 2].transform);
 
+    }
+
+    public Transform GetPoinSpawn()
+    {
+        return pointSpawnFoPlayer;
     }
     
     private IEnumerator SpawnTiles()
     {
         while (true)
         {
-
             yield return new WaitForSeconds(1);
 
             GameObject obj1 = Instantiate(tilePrefab,

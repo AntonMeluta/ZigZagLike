@@ -11,11 +11,11 @@ public static class EventsBroker
     }
 
     //Изменение статуса игры
-    public delegate void UpdateStateGameAction(GameState oldState, GameState newState);
+    /*public delegate void UpdateStateGameAction(GameState oldState, GameState newState);
     public static event UpdateStateGameAction OnUpdateStateGame;
     public static void UpdateState(GameState oldState, GameState newState)
     {
         OnUpdateStateGame?.Invoke(oldState, newState);
-    }
+    }*/
 
 }

@@ -12,11 +12,11 @@ public class FallState : PlayerBaseState
         body.useGravity = true;
     }
 
-    public override void FixedUpdate(Rigidbody body, PlayerControl playerContext)
+    public override void FixedUpdate(Transform pos, PlayerControl playerContext, Rigidbody body)
     {
         deltaTimeCounter += Time.deltaTime;
         if (deltaTimeCounter > timeToRestart)
-            EventsBroker.RestartGame();
+            playerContext.PlayerFell();
     }
     
 }

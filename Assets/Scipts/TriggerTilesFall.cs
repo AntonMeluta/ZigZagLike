@@ -1,13 +1,20 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Zenject;
 
 public class TriggerTilesFall : MonoBehaviour
 {
-    public Transform player;
-    
+    private Transform playerPosition;
+
+    [Inject]
+    private void ConstructorLike(PlayerControl player)
+    {
+        playerPosition = player.transform;
+    }
+
     private void Update()
     {
-        transform.position = player.position;
+        transform.position = playerPosition.position;
     }
 }

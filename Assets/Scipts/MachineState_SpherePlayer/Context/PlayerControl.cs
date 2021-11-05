@@ -1,10 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Zenject;
 
 public class PlayerControl : MonoBehaviour
 {
     private Rigidbody rb;
+    private TileSpawner tileSpawner;
+    private GameManager gameManager;
+
     private bool isForwardMove;
     private Vector3 targetVelocity;
 
@@ -14,11 +18,18 @@ public class PlayerControl : MonoBehaviour
     public readonly PlayerBaseState fallState = new FallState();
 
     public float speedSphere = 2;
-    public GameManager gameManager;
+
+    [Inject]
+    private void ConstructorLike(TileSpawner spawner, GameManager manager)
+    {
+        gameManager = manager;
+        tileSpawner = spawner;
+    }
 
     private void OnEnable()
     {
         EventsBroker.OnRestartGame += RestartGame;
+        InstallPosition();
     }
 
     private void OnDisable()
@@ -34,14 +45,22 @@ public class PlayerControl : MonoBehaviour
 
     private void RestartGame()
     {
-        isForwardMove = true;
-        targetVelocity = Vector3.forward;
+        InstallPosition();
+        TransitionToState(forwardMoveState);
     }
 
-    public void GetPointSpawn(Transform tileTransform)
+    public void PlayerFell()
     {
-        Vector3 vectorSpawnOnStart = tileTransform.position;
-        vectorSpawnOnStart.y += 3;
+        //gameManager.
+        EventsBroker.RestartGame();
+    }
+
+    public void InstallPosition()
+    {
+        float deltaY = 3.1f;
+        //Vector3 vectorSpawnOnStart = tileSpawner.GetPoinSpawn().position;
+        Vector3 vectorSpawnOnStart = Vector3.zero;
+        vectorSpawnOnStart.y += deltaY;
         transform.position = vectorSpawnOnStart;
     }
 
@@ -65,11 +84,12 @@ public class PlayerControl : MonoBehaviour
     
     private void FixedUpdate()
     {
-        currentState.FixedUpdate(rb, this);
+        currentState.FixedUpdate(transform, this, rb);
     }
 
     private void Update()
     {
+        print("currentState = " + currentState.ToString());
         if (Input.GetMouseButtonDown(0))
             UpdateVectorMoving();
     }

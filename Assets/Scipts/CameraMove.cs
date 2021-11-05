@@ -1,5 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
+using Zenject;
 using UnityEngine;
 
 public class CameraMove : MonoBehaviour
@@ -7,16 +6,22 @@ public class CameraMove : MonoBehaviour
     private Vector3 deltaToPlayer;
     private Vector3 vectorNew;
 
-    public Transform player;
-    
+    private Transform playerPosition;
+
+    [Inject]
+    private void ConstructorLike(PlayerControl player)
+    {
+        playerPosition = player.transform;
+    }
+
     private void Awake()
     {
-        deltaToPlayer = player.position - transform.position;
+        deltaToPlayer = playerPosition.position - transform.position;
     }
 
     private void LateUpdate()
     {
-        vectorNew = player.position - deltaToPlayer;
+        vectorNew = playerPosition.position - deltaToPlayer;
         vectorNew.y = transform.position.y;
         transform.position = vectorNew;
     }
