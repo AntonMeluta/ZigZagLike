@@ -12,7 +12,7 @@ public class TileSpawner : MonoBehaviour
 
     private void OnEnable()
     {
-        EventsBroker.RestartGameAction += RestartGame;
+        EventsBroker.OnRestartGame += RestartGame;
     }
 
     private void Start()
@@ -24,7 +24,7 @@ public class TileSpawner : MonoBehaviour
 
     private void OnDisable()
     {
-        EventsBroker.RestartGameAction -= RestartGame;
+        EventsBroker.OnRestartGame -= RestartGame;
     }
 
     private void RestartGame()
@@ -36,6 +36,11 @@ public class TileSpawner : MonoBehaviour
 
         SpawnStartArea();
         StartGame();
+    }
+
+    public void StartGame()
+    {
+        StartCoroutine(SpawnTiles());
     }
 
     private void SpawnStartArea()
@@ -65,11 +70,6 @@ public class TileSpawner : MonoBehaviour
         player.GetPointSpawn(allTiles[lineCount * lineCount / 2].transform);
 
     }
-
-    public void StartGame()
-    {
-        StartCoroutine(SpawnTiles());
-    }
     
     private IEnumerator SpawnTiles()
     {
@@ -89,6 +89,7 @@ public class TileSpawner : MonoBehaviour
                 allTiles[allTiles.Count - 1].rightPointSpawn.bounds.center, Quaternion.identity);
             allTiles.Add(obj2.GetComponent<TileControl>());
             crystallSpawner.SpawnCrystall(allTiles[allTiles.Count - 1].transform);
+
             /*if (tiles.Count > 0)
             {
 

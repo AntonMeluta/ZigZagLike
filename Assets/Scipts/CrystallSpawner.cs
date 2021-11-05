@@ -23,12 +23,12 @@ public class CrystallSpawner : MonoBehaviour
 
     private void OnEnable()
     {
-        EventsBroker.RestartGameAction += RestartGame;
+        EventsBroker.OnRestartGame += RestartGame;
     }
 
     private void OnDisable()
     {
-        EventsBroker.RestartGameAction -= RestartGame;
+        EventsBroker.OnRestartGame -= RestartGame;
     }
 
     private void RestartGame()

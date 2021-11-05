@@ -3,9 +3,19 @@ using System;
 
 public static class EventsBroker
 {
-    public static Action RestartGameAction;
-    public static void OnRestartGame()
+    //Перезапуск игры
+    public static Action OnRestartGame;
+    public static void RestartGame()
     {
-        RestartGameAction?.Invoke();
+        OnRestartGame?.Invoke();
     }
+
+    //Изменение статуса игры
+    public delegate void UpdateStateGameAction(GameState oldState, GameState newState);
+    public static event UpdateStateGameAction OnUpdateStateGame;
+    public static void UpdateState(GameState oldState, GameState newState)
+    {
+        OnUpdateStateGame?.Invoke(oldState, newState);
+    }
+
 }
