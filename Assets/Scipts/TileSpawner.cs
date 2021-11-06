@@ -5,17 +5,23 @@ using Zenject;
 
 public class TileSpawner : MonoBehaviour
 {
-    private Transform pointSpawnFoPlayer;
+    private Transform pointSpawnForPlayer;
     private CrystallSpawner crystallSpawner;
+    private GameManager gameManager;
 
-    public List<TileControl> allTiles;
-    public GameObject tilePrefab;
+    private List<TileControl> allTiles;
+    private List<GameObject> poolTiles;
+    private GameObject prefabTile;
     
+    public GameObject tilePrefabHardDiffiulty;    
+    public GameObject tilePrefabMiddleDiffiulty;    
+    public GameObject tilePrefabEasyDiffiulty;
 
     [Inject]
-    private void ConstructorLike(CrystallSpawner spawner)
+    private void ConstructorLike(CrystallSpawner spawner, GameManager gm)
     {
         crystallSpawner = spawner;
+        gameManager = gm;
     }
 
     private void OnEnable()
@@ -26,6 +32,23 @@ public class TileSpawner : MonoBehaviour
     private void Start()
     {
         allTiles = new List<TileControl>();
+        poolTiles = new List<GameObject>();
+
+        switch (gameManager.gameSettings.difficultyLevel)
+        {
+            case DifficultyLevel.easy:
+                prefabTile = tilePrefabEasyDiffiulty;
+                break;
+            case DifficultyLevel.middle:
+                prefabTile = tilePrefabMiddleDiffiulty;
+                break;
+            case DifficultyLevel.hard:
+                prefabTile = tilePrefabHardDiffiulty;
+                break;
+            default:
+                break;
+        }
+
         SpawnStartArea();
         StartGame();
     }
@@ -55,50 +78,51 @@ public class TileSpawner : MonoBehaviour
     {
         int lineCount = 3;
 
-        GameObject currentObjectTile = Instantiate(tilePrefab, Vector3.zero, Quaternion.identity);
+        GameObject currentObjectTile = Instantiate(prefabTile, Vector3.zero, Quaternion.identity);
         allTiles.Add(currentObjectTile.GetComponent<TileControl>());
 
         for (int i = 0; i < lineCount; i++)
         {
             if (i != 0)
             {
-                currentObjectTile = Instantiate(tilePrefab,
+                currentObjectTile = Instantiate(prefabTile,
                         allTiles[allTiles.Count - lineCount].GetComponent<TileControl>().
                         forwardPointSpawn.bounds.center, Quaternion.identity);
                 allTiles.Add(currentObjectTile.GetComponent<TileControl>());
             }
             for (int j = 0; j < lineCount - 1; j++)
             {
-                currentObjectTile = Instantiate(tilePrefab,
+                currentObjectTile = Instantiate(prefabTile,
                     allTiles[allTiles.Count - 1].rightPointSpawn.bounds.center, Quaternion.identity);
                 allTiles.Add(currentObjectTile.GetComponent<TileControl>());
             }
         }
 
-        pointSpawnFoPlayer = allTiles[lineCount * lineCount / 2].transform;
+        pointSpawnForPlayer = allTiles[lineCount * lineCount / 2].transform;
     }
 
     public Transform GetPoinSpawn()
     {
-        return pointSpawnFoPlayer;
+        return pointSpawnForPlayer;
     }
     
     private IEnumerator SpawnTiles()
     {
         int firstPartySpawnCount = 50;
+        float delaySlow = 0.2f;
 
         while (true)
         {
             if (allTiles.Count < firstPartySpawnCount)
                 yield return null;
             else
-                yield return new WaitForSeconds(0.2f);
+                yield return new WaitForSeconds(delaySlow);
 
             Vector3 targetPos = (Random.Range(0, 2) == 1) ?
                 allTiles[allTiles.Count - 1].forwardPointSpawn.bounds.center :
                 allTiles[allTiles.Count - 1].rightPointSpawn.bounds.center;
 
-            GameObject obj = Instantiate(tilePrefab, targetPos, Quaternion.identity);
+            GameObject obj = Instantiate(prefabTile, targetPos, Quaternion.identity);
             allTiles.Add(obj.GetComponent<TileControl>());
             crystallSpawner.SpawnCrystall(allTiles[allTiles.Count - 1].transform);
             

@@ -43,5 +43,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 88d1d846bf5a6974c9a87b4bdaa28c11, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  allTiles: []
-  tilePrefab: {fileID: 1363302591773498848, guid: dd074a5bcea531941ae52b72f9b0d604, type: 3}
+  tilePrefabHardDiffiulty: {fileID: 1363302591773498848, guid: dd074a5bcea531941ae52b72f9b0d604, type: 3}
+  tilePrefabMiddleDiffiulty: {fileID: 1363302591773498848, guid: fe189cd4c2ccdd34b99c56b3a5988a18, type: 3}
+  tilePrefabEasyDiffiulty: {fileID: 1363302591773498848, guid: 5e038bd768f938542b0690f06953114d, type: 3}

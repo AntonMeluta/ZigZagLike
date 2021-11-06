@@ -45,6 +45,7 @@ public class PlayerControl : MonoBehaviour
     private void Start()
     {
         rb = GetComponent<Rigidbody>();
+        speedSphere = gameManager.gameSettings.speedPlayer;
         TransitionToState(forwardMoveState);        
     }
 

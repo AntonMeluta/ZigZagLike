@@ -7,6 +7,8 @@ public class GameManager : MonoBehaviour
 
     private GameState currentState;
 
+    public GameSettings_SO gameSettings;
+
     private void OnEnable()
     {
         EventsBroker.OnRestartGame += RestartGame;
@@ -52,7 +54,6 @@ public class GameManager : MonoBehaviour
                 break;
         }
 
-        //EventsBroker.UpdateState(prevGameState, currentState);
     }
 
     private void Update()
