@@ -10,7 +10,6 @@ public class TileSpawner : MonoBehaviour
     private GameManager gameManager;
 
     private List<TileControl> allTiles;
-    private List<GameObject> poolTiles;
     private GameObject prefabTile;
     
     public GameObject tilePrefabHardDiffiulty;    
@@ -32,8 +31,6 @@ public class TileSpawner : MonoBehaviour
     private void Start()
     {
         allTiles = new List<TileControl>();
-        poolTiles = new List<GameObject>();
-
         switch (gameManager.gameSettings.difficultyLevel)
         {
             case DifficultyLevel.easy:

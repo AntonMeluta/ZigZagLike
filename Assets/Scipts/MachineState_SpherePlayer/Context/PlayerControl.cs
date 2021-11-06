@@ -91,13 +91,6 @@ public class PlayerControl : MonoBehaviour
     {
         currentState.FixedUpdate(transform, this, rb);
     }
-
-    private void Update()
-    {
-        print("currentState = " + currentState.ToString());
-        if (Input.GetMouseButtonDown(0))
-            UpdateVectorMoving();
-    }
     
     public void UpdateVectorMoving()
     {

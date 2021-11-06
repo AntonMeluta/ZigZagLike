@@ -5,6 +5,7 @@ public class SceneInstaller : MonoInstaller, IInitializable
 {
     public MenuScreenView menuScreenView;
     public CrystallCounterView crystallCounterView;
+    public GameScreenView gameScreenView;
     public GameObject gameManagerPrefab;
     public GameObject crystallSpawnerPrefab;
     public GameObject tileSpawnerPrefab;
@@ -14,9 +15,11 @@ public class SceneInstaller : MonoInstaller, IInitializable
     {
         BindMenuScreenMvc();
         BindCrystallCounterMvc();
+        BindGamescreenMvc();
 
         BindMenuScreenView();
         BindCrystallCounterView();
+        BindGameScreenView();
         BindGameManger();
         BindInstallerInterfaces();
         BindingCrystallSpawner();
@@ -40,6 +43,14 @@ public class SceneInstaller : MonoInstaller, IInitializable
             AsSingle();
     }
 
+    private void BindGamescreenMvc()
+    {
+        Container.
+            Bind<GameplayScreenFactory>().
+            FromInstance(new GameplayScreenFactory(gameScreenView)).
+            AsSingle();
+    }    
+
     private void BindMenuScreenView()
     {
         Container.
@@ -53,6 +64,14 @@ public class SceneInstaller : MonoInstaller, IInitializable
         Container.
             Bind<CrystallCounterView>().
             FromInstance(crystallCounterView).
+            AsSingle();
+    }
+
+    private void BindGameScreenView()
+    {
+        Container.
+            Bind<GameScreenView>().
+            FromInstance(gameScreenView).
             AsSingle();
     }
 
@@ -113,12 +132,18 @@ public class SceneInstaller : MonoInstaller, IInitializable
 
     public void Initialize()
     {
+        //MenuScreen MVC model
         MenuScreenFactory factoryMenuScreen = Container.Resolve<MenuScreenFactory>();
         factoryMenuScreen.InitializeFactory();
 
         //Crystallcounter MVC model
         CrystalCounterFactory factoryCrystalCounter = Container.Resolve<CrystalCounterFactory>();
         factoryCrystalCounter.InitializeFactory();
+
+        //GameScreen MVC model
+        GameplayScreenFactory gameplayScreenFactory = 
+            Container.Resolve<GameplayScreenFactory>();
+        gameplayScreenFactory.InitializeFactory();
 
     }
 }
