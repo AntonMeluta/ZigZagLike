@@ -8,7 +8,7 @@ public class MenuScreenView : MonoBehaviour
 {
     private GameManager gameManager;
     private Button button;
-    private MenuScreenController menuScreenController;
+    private ControllerMVC controllerMVC;
 
     public GameObject thisScreen;
     public GameObject gameplayScreen;
@@ -25,14 +25,14 @@ public class MenuScreenView : MonoBehaviour
         button.onClick.AddListener(OnClickUser);
     }
 
-    public void SetController(MenuScreenController controller)
+    public void SetController(ControllerMVC controller)
     {
-        menuScreenController = controller;
+        controllerMVC = controller;
     }
 
     public void OnClickUser()
     {
-        menuScreenController.UserPressed();
+        controllerMVC.OnEventUi(this);
     }
 
     public void ToSwithcScreen()
@@ -48,9 +48,6 @@ public class MenuScreenView : MonoBehaviour
             thisScreen.SetActive(false);
             gameplayScreen.SetActive(true);
             gameManager.UpdateGameState(GameState.game);
-        }
-        
+        }        
     }
-
-
 }

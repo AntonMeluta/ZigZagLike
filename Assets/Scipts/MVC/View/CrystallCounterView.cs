@@ -5,19 +5,29 @@ using UnityEngine.UI;
 
 public class CrystallCounterView : MonoBehaviour
 {
-    private CrystallCounterController crystallCounterController;
+    private ControllerMVC controllerMVC;
 
     public Text textCounter;
 
-    public void SetController(CrystallCounterController controller)
+    private void Start()
     {
-        crystallCounterController = controller;
-        crystallCounterController.CrystallPickuped();
+        EventsBroker.OnRestartGame += RestartGame;
+    }
+
+    private void RestartGame()
+    {
+        textCounter.text = "Score: " + 0;
+    }
+
+    public void SetController(ControllerMVC controller)
+    {
+        controllerMVC = controller;
+        controllerMVC.OnEventUi(this);
     }
 
     public void CrystallPickupEvent()
     {
-        crystallCounterController.CrystallPickuped();
+        controllerMVC.OnEventUi(this);
     }
 
     public void UpdateValueOnScreen(int newValue)

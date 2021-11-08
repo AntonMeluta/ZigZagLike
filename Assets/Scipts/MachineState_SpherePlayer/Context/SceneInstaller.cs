@@ -13,9 +13,7 @@ public class SceneInstaller : MonoInstaller, IInitializable
 
     public override void InstallBindings()
     {
-        BindMenuScreenMvc();
-        BindCrystallCounterMvc();
-        BindGamescreenMvc();
+        BindMVC();
 
         BindMenuScreenView();
         BindCrystallCounterView();
@@ -27,29 +25,14 @@ public class SceneInstaller : MonoInstaller, IInitializable
         BindingPlayerSpawner();
     }
 
-    private void BindMenuScreenMvc()
+    private void BindMVC()
     {
         Container.
-            Bind<MenuScreenFactory>().
-            FromInstance(new MenuScreenFactory(menuScreenView)).
+            Bind<FactoryMVC>().
+            FromInstance(new FactoryMVC(crystallCounterView, gameScreenView, menuScreenView)).
             AsSingle();
     }
 
-    private void BindCrystallCounterMvc()
-    {
-        Container.
-            Bind<CrystalCounterFactory>().
-            FromInstance(new CrystalCounterFactory(crystallCounterView)).
-            AsSingle();
-    }
-
-    private void BindGamescreenMvc()
-    {
-        Container.
-            Bind<GameplayScreenFactory>().
-            FromInstance(new GameplayScreenFactory(gameScreenView)).
-            AsSingle();
-    }    
 
     private void BindMenuScreenView()
     {
@@ -132,18 +115,8 @@ public class SceneInstaller : MonoInstaller, IInitializable
 
     public void Initialize()
     {
-        //MenuScreen MVC model
-        MenuScreenFactory factoryMenuScreen = Container.Resolve<MenuScreenFactory>();
-        factoryMenuScreen.InitializeFactory();
-
-        //Crystallcounter MVC model
-        CrystalCounterFactory factoryCrystalCounter = Container.Resolve<CrystalCounterFactory>();
-        factoryCrystalCounter.InitializeFactory();
-
-        //GameScreen MVC model
-        GameplayScreenFactory gameplayScreenFactory = 
-            Container.Resolve<GameplayScreenFactory>();
-        gameplayScreenFactory.InitializeFactory();
-
+        FactoryMVC factoryMVC =
+            Container.Resolve<FactoryMVC>();
+        factoryMVC.InitializeFactory();
     }
 }

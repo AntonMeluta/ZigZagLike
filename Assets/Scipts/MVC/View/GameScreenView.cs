@@ -8,7 +8,7 @@ public class GameScreenView : MonoBehaviour
 {
     private GameManager gamManager;
     private Button button;
-    private GameScreenController gameScreenController;
+    private ControllerMVC controllerMVC;
     private PlayerControl playerControl;    
 
     [Inject]
@@ -23,14 +23,14 @@ public class GameScreenView : MonoBehaviour
         button.onClick.AddListener(OnClickUser);
     }
 
-    public void SetController(GameScreenController controller)
+    public void SetController(ControllerMVC controller)
     {
-        gameScreenController = controller;
+        controllerMVC = controller;
     }
 
     public void OnClickUser()
     {
-        gameScreenController.UserTap();
+        controllerMVC.OnEventUi(this);
     }
 
     public void UpdateVelocityPlayer()
