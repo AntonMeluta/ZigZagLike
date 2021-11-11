@@ -6,7 +6,8 @@ public class ForwardMoveState : PlayerBaseState
 {
     public override void EnterState(Rigidbody body)
     {
-        
+        body.isKinematic = false;
+        body.useGravity = true;
     }
 
     public override void FixedUpdate(Transform pos, PlayerControl playerContext, Rigidbody body)

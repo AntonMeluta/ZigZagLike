@@ -46,8 +46,8 @@ public class TileSpawner : MonoBehaviour
                 break;
         }
 
-        SpawnStartArea();
-        StartGame();
+        /*SpawnStartArea();
+        StartGame();*/
     }
 
     private void OnDisable()
@@ -71,7 +71,7 @@ public class TileSpawner : MonoBehaviour
         StartCoroutine(SpawnTiles());
     }
 
-    private void SpawnStartArea()
+    public void SpawnStartArea()
     {
         int lineCount = 3;
 

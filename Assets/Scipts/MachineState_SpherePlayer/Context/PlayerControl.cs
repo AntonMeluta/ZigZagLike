@@ -17,7 +17,8 @@ public class PlayerControl : MonoBehaviour
     private PlayerBaseState currentState;
     public readonly PlayerBaseState rightMoveState = new RightMoveState();
     public readonly PlayerBaseState forwardMoveState = new ForwardMoveState();
-    public readonly PlayerBaseState fallState = new FallState();
+    public readonly PlayerBaseState fallState = new FallState(); 
+    public readonly PlayerBaseState idleState = new IdleState();
 
     public float speedSphere = 2;
 
@@ -46,7 +47,7 @@ public class PlayerControl : MonoBehaviour
     {
         rb = GetComponent<Rigidbody>();
         speedSphere = gameManager.gameSettings.speedPlayer;
-        TransitionToState(forwardMoveState);        
+        TransitionToState(idleState);        
     }
 
     private void RestartGame()
@@ -57,7 +58,7 @@ public class PlayerControl : MonoBehaviour
 
     public void PlayerFell()
     {
-        EventsBroker.RestartGame();
+        TransitionToState(idleState);
         menuScreenView.ToSwithcScreen();
     }
 
@@ -82,7 +83,7 @@ public class PlayerControl : MonoBehaviour
     {
         if (other.GetComponent<CrystallControl>())
         {
-            crystallCounterView.CrystallPickupEvent();
+            crystallCounterView.UpdateValueOnScreen();
             other.GetComponent<CrystallControl>().CollisionWithPlayer();
         }
     }

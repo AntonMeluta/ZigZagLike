@@ -8,7 +8,6 @@ public class GameScreenView : MonoBehaviour
 {
     private GameManager gamManager;
     private Button button;
-    private ControllerMVC controllerMVC;
     private PlayerControl playerControl;    
 
     [Inject]
@@ -20,17 +19,7 @@ public class GameScreenView : MonoBehaviour
     private void Awake()
     {
         button = GetComponent<Button>();
-        button.onClick.AddListener(OnClickUser);
-    }
-
-    public void SetController(ControllerMVC controller)
-    {
-        controllerMVC = controller;
-    }
-
-    public void OnClickUser()
-    {
-        controllerMVC.OnEventUi(this);
+        button.onClick.AddListener(UpdateVelocityPlayer);
     }
 
     public void UpdateVelocityPlayer()

@@ -45,7 +45,7 @@ public class GameManager : MonoBehaviour
         switch (state)
         {
             case GameState.menu:
-                Time.timeScale = 0;
+                Time.timeScale = 1;
                 break;
             case GameState.game:
                 Time.timeScale = 1;                

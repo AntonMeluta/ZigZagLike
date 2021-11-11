@@ -13,8 +13,6 @@ public class SceneInstaller : MonoInstaller, IInitializable
 
     public override void InstallBindings()
     {
-        BindMVC();
-
         BindMenuScreenView();
         BindCrystallCounterView();
         BindGameScreenView();
@@ -24,15 +22,6 @@ public class SceneInstaller : MonoInstaller, IInitializable
         BindingTileSpawner();
         BindingPlayerSpawner();
     }
-
-    private void BindMVC()
-    {
-        Container.
-            Bind<FactoryMVC>().
-            FromInstance(new FactoryMVC(crystallCounterView, gameScreenView, menuScreenView)).
-            AsSingle();
-    }
-
 
     private void BindMenuScreenView()
     {
@@ -115,8 +104,6 @@ public class SceneInstaller : MonoInstaller, IInitializable
 
     public void Initialize()
     {
-        FactoryMVC factoryMVC =
-            Container.Resolve<FactoryMVC>();
-        factoryMVC.InitializeFactory();
+        
     }
 }

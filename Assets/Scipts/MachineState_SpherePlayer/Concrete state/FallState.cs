@@ -9,6 +9,7 @@ public class FallState : PlayerBaseState
     public override void EnterState(Rigidbody body)
     {
         deltaTimeCounter = 0;
+        body.isKinematic = false;
         body.useGravity = true;
     }
 
