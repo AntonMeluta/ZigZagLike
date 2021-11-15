@@ -6,14 +6,27 @@ using Zenject;
 public class TileControl : MonoBehaviour
 {
     private Rigidbody body;
+    private TileSpawner tileSpawner;
 
     public Renderer rightPointSpawn;
     public Renderer forwardPointSpawn;
-    
+
+    [Inject]
+    private void ConstructorLike(TileSpawner spawner)
+    {
+        //tileSpawner = spawner;
+        print("ConstructorLike(TileSpawner spawner)");
+    }
+
     private void Awake()
     {
         body = GetComponent<Rigidbody>();
         body.isKinematic = true;
+    }
+
+    private void Start()
+    {
+        tileSpawner = FindObjectOfType<TileSpawner>();
     }
 
     private void OnTriggerExit(Collider other)
@@ -25,6 +38,7 @@ public class TileControl : MonoBehaviour
 
     private void DisableAction()
     {
-        gameObject.SetActive(false);
+        tileSpawner.RemoveTileFromList(this);
+        Destroy(gameObject);
     }
 }

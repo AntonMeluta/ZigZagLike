@@ -10,6 +10,13 @@ public static class EventsBroker
         OnRestartGame?.Invoke();
     }
 
+    //Переход в главное меню
+    public static Action OnGameplay;
+    public static void GameplayAction()
+    {
+        OnGameplay?.Invoke();
+    }
+
     //Изменение статуса игры
     /*public delegate void UpdateStateGameAction(GameState oldState, GameState newState);
     public static event UpdateStateGameAction OnUpdateStateGame;

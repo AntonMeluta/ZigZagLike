@@ -10,6 +10,8 @@ public class PlayerControl : MonoBehaviour
     private GameManager gameManager;
     private MenuScreenView menuScreenView;
     private CrystallCounterView crystallCounterView;
+    private DataManager dataManager;
+    private AudioController audioController;
 
     private bool isForwardMove;
     private Vector3 targetVelocity;
@@ -24,23 +26,28 @@ public class PlayerControl : MonoBehaviour
 
     [Inject]
     private void ConstructorLike(TileSpawner spawner, GameManager manager, 
-        MenuScreenView menuView, CrystallCounterView crystallView)
+        MenuScreenView menuView, CrystallCounterView crystallView,
+        DataManager dm, AudioController ac)
     {
         gameManager = manager;
         tileSpawner = spawner;
         menuScreenView = menuView;
         crystallCounterView = crystallView;
+        dataManager = dm;
+        audioController = ac;
     }
 
     private void OnEnable()
     {
         EventsBroker.OnRestartGame += RestartGame;
+        EventsBroker.OnGameplay += ActionGameplay;
         InstallPosition();
     }
 
     private void OnDisable()
     {
         EventsBroker.OnRestartGame -= RestartGame;
+        EventsBroker.OnGameplay -= ActionGameplay;
     }
 
     private void Start()
@@ -52,13 +59,25 @@ public class PlayerControl : MonoBehaviour
 
     private void RestartGame()
     {
-        InstallPosition();
+        InstallPosition();        
+        TransitionToState(idleState);
+    }
+
+    private void ActionGameplay()
+    {
+        speedSphere = gameManager.gameSettings.speedPlayer;
         TransitionToState(forwardMoveState);
     }
 
+    public void SendSoundFell()
+    {
+        audioController.PlaySoundEffect(SoundEffect.LossSound);
+    }
+    
     public void PlayerFell()
     {
-        TransitionToState(idleState);
+        TransitionToState(idleState);        
+        dataManager.SaveCountSessions();
         menuScreenView.ToSwithcScreen();
     }
 
@@ -84,6 +103,7 @@ public class PlayerControl : MonoBehaviour
         if (other.GetComponent<CrystallControl>())
         {
             crystallCounterView.UpdateValueOnScreen();
+            audioController.PlaySoundEffect(SoundEffect.PickupCrystall);
             other.GetComponent<CrystallControl>().CollisionWithPlayer();
         }
     }
@@ -95,7 +115,12 @@ public class PlayerControl : MonoBehaviour
     
     public void UpdateVectorMoving()
     {
-        TransitionToState(currentState = (currentState == forwardMoveState) 
-            ? rightMoveState : forwardMoveState);
+        if (currentState == idleState || currentState == fallState)
+            return;
+
+        PlayerBaseState nextState = (currentState == forwardMoveState)
+            ? rightMoveState : forwardMoveState;
+        TransitionToState(nextState);
+        audioController.PlaySoundEffect(SoundEffect.movePlayer);
     }
 }

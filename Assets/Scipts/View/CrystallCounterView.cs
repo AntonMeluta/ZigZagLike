@@ -2,11 +2,20 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using Zenject;
 
 public class CrystallCounterView : MonoBehaviour
 {
     private int counterCrystalls;
+    private DataManager dataManager;
+
     public Text textCounter;
+
+    [Inject]
+    private void ConstructorLike(DataManager dm)
+    {
+        dataManager = dm;
+    }
 
     private void Start()
     {
@@ -24,5 +33,6 @@ public class CrystallCounterView : MonoBehaviour
     {
         counterCrystalls++;
         textCounter.text = "Score: " + counterCrystalls;
+        dataManager.SaveScore(counterCrystalls);
     }
 }

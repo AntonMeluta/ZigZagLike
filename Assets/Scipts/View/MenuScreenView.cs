@@ -7,6 +7,7 @@ using Zenject;
 public class MenuScreenView : MonoBehaviour
 {
     private GameManager gameManager;
+    private AudioController audioController;
     private Button button;
     private PlayerControl playerControl;
 
@@ -14,9 +15,10 @@ public class MenuScreenView : MonoBehaviour
     public GameObject gameplayScreen;
 
     [Inject]
-    private void ConstructorLike(GameManager gm)
+    private void ConstructorLike(GameManager gm, AudioController ac)
     {
         gameManager = gm;
+        audioController = ac;
     }
 
     private void Awake()
@@ -31,14 +33,16 @@ public class MenuScreenView : MonoBehaviour
         {
             thisScreen.SetActive(true);
             gameplayScreen.SetActive(false);
+            EventsBroker.RestartGame();
             gameManager.UpdateGameState(GameState.menu);
         }
         else
         {
             thisScreen.SetActive(false);
             gameplayScreen.SetActive(true);
-            gameManager.UpdateGameState(GameState.game);
-            EventsBroker.RestartGame();
+            audioController.PlaySoundEffect(SoundEffect.menuTap);
+            EventsBroker.GameplayAction();
+            gameManager.UpdateGameState(GameState.game);            
         }        
     }
 }

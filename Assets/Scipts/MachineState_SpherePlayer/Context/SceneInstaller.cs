@@ -10,9 +10,13 @@ public class SceneInstaller : MonoInstaller, IInitializable
     public GameObject crystallSpawnerPrefab;
     public GameObject tileSpawnerPrefab;
     public GameObject playerPrefab;
+    public GameObject dataManagerPrefab;
+    public GameObject audioControllerPrefab;
 
     public override void InstallBindings()
     {
+        BindDataManager();
+        BindAudioController();
         BindMenuScreenView();
         BindCrystallCounterView();
         BindGameScreenView();
@@ -20,7 +24,31 @@ public class SceneInstaller : MonoInstaller, IInitializable
         BindInstallerInterfaces();
         BindingCrystallSpawner();
         BindingTileSpawner();
-        BindingPlayerSpawner();
+        BindingPlayerSpawner();        
+    }
+
+    private void BindDataManager()
+    {
+        DataManager dataManager = Container.
+                    InstantiatePrefabForComponent<DataManager>(dataManagerPrefab,
+                    Vector3.zero, Quaternion.identity, null);
+
+        Container.
+            Bind<DataManager>().
+            FromInstance(dataManager).
+            AsSingle();
+    }
+
+    private void BindAudioController()
+    {
+        AudioController audioController = Container.
+                    InstantiatePrefabForComponent<AudioController>(audioControllerPrefab,
+                    Vector3.zero, Quaternion.identity, null);
+
+        Container.
+            Bind<AudioController>().
+            FromInstance(audioController).
+            AsSingle();
     }
 
     private void BindMenuScreenView()

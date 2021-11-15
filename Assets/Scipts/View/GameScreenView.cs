@@ -11,7 +11,7 @@ public class GameScreenView : MonoBehaviour
     private PlayerControl playerControl;    
 
     [Inject]
-    private void ConstructorLike(PlayerControl pc)
+    private void ConstructorLike(PlayerControl pc, AudioController ac)
     {
         playerControl = pc;
     }

@@ -15,12 +15,11 @@ public class ForwardMoveState : PlayerBaseState
         RaycastHit hit;
         if (Physics.Raycast(pos.position, pos.TransformDirection(Vector3.down), out hit))
         {
-            Debug.DrawLine(pos.position, pos.TransformDirection(Vector3.down), Color.yellow);
             body.velocity = Vector3.forward * playerContext.speedSphere;
         }
         else
         {
-            Debug.DrawLine(pos.position, pos.TransformDirection(Vector3.down), Color.red);
+            playerContext.SendSoundFell();
             playerContext.TransitionToState(playerContext.fallState);
         }
     }

@@ -9,11 +9,11 @@ public class TileSpawner : MonoBehaviour
     private CrystallSpawner crystallSpawner;
     private GameManager gameManager;
 
-    private List<TileControl> allTiles;
+    private List<TileControl> allTiles = new List<TileControl>();
     private GameObject prefabTile;
-    
-    public GameObject tilePrefabHardDiffiulty;    
-    public GameObject tilePrefabMiddleDiffiulty;    
+
+    public GameObject tilePrefabHardDiffiulty;
+    public GameObject tilePrefabMiddleDiffiulty;
     public GameObject tilePrefabEasyDiffiulty;
 
     [Inject]
@@ -30,24 +30,23 @@ public class TileSpawner : MonoBehaviour
 
     private void Start()
     {
-        allTiles = new List<TileControl>();
         switch (gameManager.gameSettings.difficultyLevel)
         {
-            case DifficultyLevel.easy:
+            case DifficultyLevel.Easy:
                 prefabTile = tilePrefabEasyDiffiulty;
                 break;
-            case DifficultyLevel.middle:
+            case DifficultyLevel.Middle:
                 prefabTile = tilePrefabMiddleDiffiulty;
                 break;
-            case DifficultyLevel.hard:
+            case DifficultyLevel.Hard:
                 prefabTile = tilePrefabHardDiffiulty;
                 break;
             default:
                 break;
         }
 
-        /*SpawnStartArea();
-        StartGame();*/
+        SpawnStartArea();
+        StartGame();
     }
 
     private void OnDisable()
@@ -57,13 +56,39 @@ public class TileSpawner : MonoBehaviour
 
     private void RestartGame()
     {
-        foreach (TileControl tile in allTiles)
-            Destroy(tile.gameObject);
+        if (allTiles.Count > 0)
+        {
+            foreach (TileControl tile in allTiles)
+                Destroy(tile.gameObject);
+        }        
+
         allTiles = new List<TileControl>();
-        StopAllCoroutines();
+        gameManager.gameSettings.UpdateSpeedPlayer();
+
+        switch (gameManager.gameSettings.difficultyLevel)
+        {
+            case DifficultyLevel.Easy:                
+                prefabTile = tilePrefabEasyDiffiulty;
+                break;
+            case DifficultyLevel.Middle:
+                prefabTile = tilePrefabMiddleDiffiulty;
+                break;
+            case DifficultyLevel.Hard:
+                prefabTile = tilePrefabHardDiffiulty;
+                break;
+            default:
+                break;
+        }
+                StopAllCoroutines();
 
         SpawnStartArea();
         StartGame();
+    }
+
+    public void RemoveTileFromList(TileControl tile)
+    {
+        allTiles.Remove(tile);
+        print("allTiles.Count = " + allTiles.Count);
     }
 
     public void StartGame()
@@ -97,41 +122,28 @@ public class TileSpawner : MonoBehaviour
 
         pointSpawnForPlayer = allTiles[lineCount * lineCount / 2].transform;
     }
-
-    public Transform GetPoinSpawn()
-    {
-        return pointSpawnForPlayer;
-    }
     
     private IEnumerator SpawnTiles()
     {
         int firstPartySpawnCount = 50;
-        float delaySlow = 0.2f;
+        //float delaySlow = 0.3f;
 
         while (true)
         {
-            if (allTiles.Count < firstPartySpawnCount)
-                yield return null;
-            else
-                yield return new WaitForSeconds(delaySlow);
 
-            Vector3 targetPos = (Random.Range(0, 2) == 1) ?
+            if (allTiles.Count < firstPartySpawnCount)
+            {
+                Vector3 targetPos = (Random.Range(0, 2) == 1) ?
                 allTiles[allTiles.Count - 1].forwardPointSpawn.bounds.center :
                 allTiles[allTiles.Count - 1].rightPointSpawn.bounds.center;
 
-            GameObject obj = Instantiate(prefabTile, targetPos, Quaternion.identity);
-            allTiles.Add(obj.GetComponent<TileControl>());
-            crystallSpawner.SpawnCrystall(allTiles[allTiles.Count - 1].transform);
-            
-            /*if (tiles.Count > 0)
-            {
-
+                GameObject obj = Instantiate(prefabTile, targetPos, Quaternion.identity);
+                allTiles.Add(obj.GetComponent<TileControl>());
+                crystallSpawner.SpawnCrystall(allTiles[allTiles.Count - 1].transform);
             }
-            else
-            {
-                GameObject obj = Instantiate(tilePrefab, Vector3.zero, Quaternion.identity);
-                lastTile = obj.GetComponent<TileControl>();
-            }*/
+
+            yield return null;
+
         }
     }
 }

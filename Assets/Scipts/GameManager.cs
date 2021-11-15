@@ -28,14 +28,7 @@ public class GameManager : MonoBehaviour
     {
         UpdateGameState(GameState.menu);
     }
-    
-    //Загрузка всех сохранённых данных из реестра
-    /*private void InitGameData()
-    {
-        StatsManager.LoadResult();
-        StatsManager.LoadСomplexityValue();
-    }*/
-
+  
     //Глобальная точка входа для работы с изменением состояния игры
     public void UpdateGameState(GameState state)
     {
@@ -44,11 +37,11 @@ public class GameManager : MonoBehaviour
 
         switch (state)
         {
-            case GameState.menu:
-                Time.timeScale = 1;
+            case GameState.menu:                
                 break;
             case GameState.game:
-                Time.timeScale = 1;                
+                EventsBroker.RestartGame();
+                EventsBroker.GameplayAction();
                 break;
             default:
                 break;
