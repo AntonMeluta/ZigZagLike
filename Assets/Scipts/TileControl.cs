@@ -24,6 +24,16 @@ public class TileControl : MonoBehaviour
         body.isKinematic = true;
     }
 
+    private void OnEnable()
+    {
+        body.isKinematic = true;
+    }
+
+    private void OnDisable()
+    {
+        CancelInvoke();
+    }
+
     private void Start()
     {
         tileSpawner = FindObjectOfType<TileSpawner>();
@@ -38,7 +48,7 @@ public class TileControl : MonoBehaviour
 
     private void DisableAction()
     {
+        gameObject.SetActive(false);
         tileSpawner.RemoveTileFromList(this);
-        Destroy(gameObject);
     }
 }

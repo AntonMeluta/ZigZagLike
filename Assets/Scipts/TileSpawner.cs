@@ -5,22 +5,21 @@ using Zenject;
 
 public class TileSpawner : MonoBehaviour
 {
+    private TagsObjectToPool tagsObjectToPool;
+
     private Transform pointSpawnForPlayer;
     private CrystallSpawner crystallSpawner;
     private GameManager gameManager;
+    private ObjectPooler objectPooler;
 
     private List<TileControl> allTiles = new List<TileControl>();
-    private GameObject prefabTile;
-
-    public GameObject tilePrefabHardDiffiulty;
-    public GameObject tilePrefabMiddleDiffiulty;
-    public GameObject tilePrefabEasyDiffiulty;
 
     [Inject]
-    private void ConstructorLike(CrystallSpawner spawner, GameManager gm)
+    private void ConstructorLike(CrystallSpawner spawner, GameManager gm, ObjectPooler pooler)
     {
         crystallSpawner = spawner;
         gameManager = gm;
+        objectPooler = pooler;
     }
 
     private void OnEnable()
@@ -33,13 +32,13 @@ public class TileSpawner : MonoBehaviour
         switch (gameManager.gameSettings.difficultyLevel)
         {
             case DifficultyLevel.Easy:
-                prefabTile = tilePrefabEasyDiffiulty;
+                tagsObjectToPool = TagsObjectToPool.EasyLvlTile;
                 break;
             case DifficultyLevel.Middle:
-                prefabTile = tilePrefabMiddleDiffiulty;
+                tagsObjectToPool = TagsObjectToPool.MiddleLvlTile;
                 break;
             case DifficultyLevel.Hard:
-                prefabTile = tilePrefabHardDiffiulty;
+                tagsObjectToPool = TagsObjectToPool.HardLvlTile;
                 break;
             default:
                 break;
@@ -56,11 +55,7 @@ public class TileSpawner : MonoBehaviour
 
     private void RestartGame()
     {
-        if (allTiles.Count > 0)
-        {
-            foreach (TileControl tile in allTiles)
-                Destroy(tile.gameObject);
-        }        
+        objectPooler.ClearAllLists();
 
         allTiles = new List<TileControl>();
         gameManager.gameSettings.UpdateSpeedPlayer();
@@ -68,13 +63,13 @@ public class TileSpawner : MonoBehaviour
         switch (gameManager.gameSettings.difficultyLevel)
         {
             case DifficultyLevel.Easy:                
-                prefabTile = tilePrefabEasyDiffiulty;
+                tagsObjectToPool = TagsObjectToPool.EasyLvlTile;
                 break;
             case DifficultyLevel.Middle:
-                prefabTile = tilePrefabMiddleDiffiulty;
+                tagsObjectToPool = TagsObjectToPool.MiddleLvlTile;
                 break;
             case DifficultyLevel.Hard:
-                prefabTile = tilePrefabHardDiffiulty;
+                tagsObjectToPool = TagsObjectToPool.HardLvlTile;
                 break;
             default:
                 break;
@@ -100,22 +95,31 @@ public class TileSpawner : MonoBehaviour
     {
         int lineCount = 3;
 
-        GameObject currentObjectTile = Instantiate(prefabTile, Vector3.zero, Quaternion.identity);
+        GameObject currentObjectTile = objectPooler.GetPooledObject(tagsObjectToPool.ToString());
+        currentObjectTile.transform.position = Vector3.zero;
+        currentObjectTile.transform.rotation = Quaternion.identity;
+        currentObjectTile.SetActive(true);
         allTiles.Add(currentObjectTile.GetComponent<TileControl>());
 
         for (int i = 0; i < lineCount; i++)
         {
             if (i != 0)
             {
-                currentObjectTile = Instantiate(prefabTile,
-                        allTiles[allTiles.Count - lineCount].GetComponent<TileControl>().
-                        forwardPointSpawn.bounds.center, Quaternion.identity);
+                currentObjectTile = objectPooler.GetPooledObject(tagsObjectToPool.ToString());
+                currentObjectTile.transform.position =
+                    allTiles[allTiles.Count - lineCount].GetComponent<TileControl>().
+                        forwardPointSpawn.bounds.center;
+                currentObjectTile.transform.rotation = Quaternion.identity;
+                currentObjectTile.SetActive(true);
                 allTiles.Add(currentObjectTile.GetComponent<TileControl>());
             }
             for (int j = 0; j < lineCount - 1; j++)
             {
-                currentObjectTile = Instantiate(prefabTile,
-                    allTiles[allTiles.Count - 1].rightPointSpawn.bounds.center, Quaternion.identity);
+                currentObjectTile = objectPooler.GetPooledObject(tagsObjectToPool.ToString());
+                currentObjectTile.transform.position =
+                    allTiles[allTiles.Count - 1].rightPointSpawn.bounds.center;
+                currentObjectTile.transform.rotation = Quaternion.identity;
+                currentObjectTile.SetActive(true);
                 allTiles.Add(currentObjectTile.GetComponent<TileControl>());
             }
         }
@@ -126,24 +130,23 @@ public class TileSpawner : MonoBehaviour
     private IEnumerator SpawnTiles()
     {
         int firstPartySpawnCount = 50;
-        //float delaySlow = 0.3f;
 
         while (true)
         {
-
             if (allTiles.Count < firstPartySpawnCount)
             {
                 Vector3 targetPos = (Random.Range(0, 2) == 1) ?
                 allTiles[allTiles.Count - 1].forwardPointSpawn.bounds.center :
                 allTiles[allTiles.Count - 1].rightPointSpawn.bounds.center;
 
-                GameObject obj = Instantiate(prefabTile, targetPos, Quaternion.identity);
+                GameObject obj = objectPooler.GetPooledObject(tagsObjectToPool.ToString());
+                obj.transform.position = targetPos;
+                obj.transform.rotation = Quaternion.identity;
+                obj.SetActive(true);
                 allTiles.Add(obj.GetComponent<TileControl>());
                 crystallSpawner.SpawnCrystall(allTiles[allTiles.Count - 1].transform);
             }
-
             yield return null;
-
         }
     }
 }

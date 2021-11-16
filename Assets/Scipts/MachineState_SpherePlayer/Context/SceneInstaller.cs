@@ -4,6 +4,7 @@ using UnityEngine;
 public class SceneInstaller : MonoInstaller, IInitializable
 {
     public MenuScreenView menuScreenView;
+    public GameObject objectPoolerPrefab;
     public CrystallCounterView crystallCounterView;
     public GameScreenView gameScreenView;
     public GameObject gameManagerPrefab;
@@ -18,6 +19,7 @@ public class SceneInstaller : MonoInstaller, IInitializable
         BindDataManager();
         BindAudioController();
         BindMenuScreenView();
+        BindObjectPooler();
         BindCrystallCounterView();
         BindGameScreenView();
         BindGameManger();
@@ -56,6 +58,17 @@ public class SceneInstaller : MonoInstaller, IInitializable
         Container.
             Bind<MenuScreenView>().
             FromInstance(menuScreenView).
+            AsSingle();
+    }
+
+    private void BindObjectPooler()
+    {
+        ObjectPooler objectPooler = Container.
+                    InstantiatePrefabForComponent<ObjectPooler>(objectPoolerPrefab);
+
+        Container.
+            Bind<ObjectPooler>().
+            FromInstance(objectPooler).
             AsSingle();
     }
 

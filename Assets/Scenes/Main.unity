@@ -2134,6 +2134,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   menuScreenView: {fileID: 430288514}
+  objectPoolerPrefab: {fileID: 7116125564615345488, guid: efaf91a589422534c9ce6d71171715b1, type: 3}
   crystallCounterView: {fileID: 1832477899}
   gameScreenView: {fileID: 1832477900}
   gameManagerPrefab: {fileID: 4875403528234215943, guid: 25c4509e83879cb4b92c802634cb2f46, type: 3}

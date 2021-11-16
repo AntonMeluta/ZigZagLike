@@ -7,17 +7,17 @@ public class CrystallSpawner : MonoBehaviour
 {
     private List<GameObject> allCrystalls;
     private GameManager gameManager;
+    private ObjectPooler objectPooler;
 
     private int countTilesInBlock;
     private int needIndexSpawn;
     private int callCounter;
 
-    public GameObject crystallPrefab;
-
     [Inject]
-    private void ConstructorLike(GameManager gm)
+    private void ConstructorLike(GameManager gm, ObjectPooler pooler)
     {
         gameManager = gm;
+        objectPooler = pooler;
     }
 
     private void Awake()
@@ -40,9 +40,7 @@ public class CrystallSpawner : MonoBehaviour
     }
 
     private void RestartGame()
-    {
-        foreach (GameObject crystall in allCrystalls)
-            Destroy(crystall);        
+    {    
         allCrystalls = new List<GameObject>();
 
         countTilesInBlock = 5;
@@ -75,7 +73,12 @@ public class CrystallSpawner : MonoBehaviour
             float deltaHeight = 3;
             Vector3 positionSpawn = pointSpawn.position;
             positionSpawn.y += deltaHeight;
-            allCrystalls.Add(Instantiate(crystallPrefab, positionSpawn, Quaternion.identity));
+            GameObject crystallObj = objectPooler.
+                GetPooledObject(TagsObjectToPool.CrystallPickuped.ToString());
+            crystallObj.transform.position = positionSpawn;
+            crystallObj.transform.rotation = Quaternion.identity;
+            crystallObj.SetActive(true);
+            allCrystalls.Add(crystallObj);
         }
     }
 
@@ -88,7 +91,12 @@ public class CrystallSpawner : MonoBehaviour
             float deltaHeight = 3;
             Vector3 positionSpawn = pointSpawn.position;
             positionSpawn.y += deltaHeight;
-            allCrystalls.Add(Instantiate(crystallPrefab, positionSpawn, Quaternion.identity));
+            GameObject crystallObj = objectPooler.
+                GetPooledObject(TagsObjectToPool.CrystallPickuped.ToString());
+            crystallObj.transform.position = positionSpawn;
+            crystallObj.transform.rotation = Quaternion.identity;
+            crystallObj.SetActive(true);
+            allCrystalls.Add(crystallObj);
 
             if (callCounter % (countTilesInBlock * countTilesInBlock) != 0)
                 needIndexSpawn += (countTilesInBlock + 1);

@@ -177,8 +177,8 @@ GameObject:
   - component: {fileID: 1363302591773498875}
   - component: {fileID: 5606878319241625345}
   m_Layer: 0
-  m_Name: TileMiddleDifficulty 1
-  m_TagString: Untagged
+  m_Name: TileMiddleDifficulty
+  m_TagString: MiddleLvlTile
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
