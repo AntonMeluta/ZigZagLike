@@ -83,7 +83,6 @@ public class TileSpawner : MonoBehaviour
     public void RemoveTileFromList(TileControl tile)
     {
         allTiles.Remove(tile);
-        print("allTiles.Count = " + allTiles.Count);
     }
 
     public void StartGame()
